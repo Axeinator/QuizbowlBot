@@ -1,0 +1,27 @@
+// This is **not** a JavaScript file, and as a result, it won't have the proper linting
+
+/*
+  * This is a guide on how to write a command:
+  * Use the given structure by exporting the following:
+    * name: 'commandName' (so it's [prefix] [commandName] [arguments])
+    * description: what goes in the help command
+    * args: do you require an argument, and if so, at least how many? Note that simple checking will be done for this.
+    * execute: given the message (and the arguments), what do you actually do? Note that you can recall the content after trims with `args.join(" ")`
+  * You can follow the example at the bottom that should work
+  * Additional notes:
+    * You do not need to check for the prefix - it's done for you
+    * You can modify both message and args (it's not recommended but it is possible)
+    * If you require a package, feel free to use the require as standard
+*/
+
+module.exports = {
+	name: 'sampleCommandName',
+  onHelp: true,
+  shortDesc: 'This is what appears in the main help command.',
+	description: 'This is a sample command to display what happens when you call the help command.',
+  example: 'an example on how to call the command',
+  args: 0,
+	execute(message, args) {
+		message.channel.send("You can send almost anything you want to, but you're not limited to sending. Do anything you want here.");
+	},
+};
