@@ -12,7 +12,10 @@ const firebaseConfig = {
 };
 
 // Initialize Firebase
-firebase.initializeApp(firebaseConfig);
-var db = firebase.database();
+const dbSetup = () => {
+  firebase.initializeApp(firebaseConfig);
+  return firebase.database();
+}
 
-module.exports = { db };
+
+exports.dbSetup =  dbSetup;

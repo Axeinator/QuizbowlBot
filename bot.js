@@ -1,5 +1,5 @@
 const discord = require("discord.js");
-const { db } = require('./firebase');
+const { db } = require('./helpers/firebase/firebaseSetup');
 const client = new discord.Client();
 client.commands = new discord.Collection();
 require('dotenv').config();
