@@ -9,5 +9,7 @@ function getRandomInt(min, max) {
 
 db = dbSetup()
 
-db.ref(`/tossups/${getRandomInt(1, 99)}`).once('value')
-  .then(snapshot => console.log(snapshot.val()))
+function randomTossup() {
+  db.ref(`/tossups/${getRandomInt(1, 99)}`).once('value')
+    .then(snapshot => console.log(snapshot.val()))
+}
