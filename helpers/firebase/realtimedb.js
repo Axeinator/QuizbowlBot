@@ -11,7 +11,7 @@ db = dbSetup()
 
 async function randomTossup() {
   let tossup = await db.ref(`/tossups/${getRandomInt(1, 99)}`).once('value')
-  return tossup.val().text
+  return [tossup.val().text, tossup.val().answer]
 }
 
 module.exports = { randomTossup }

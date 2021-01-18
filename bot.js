@@ -1,5 +1,5 @@
 const discord = require("discord.js");
-const { randomTossup } = require('./helpers/firebase/realtimedb');
+const {randomTossup} = require('./helpers/firebase/realtimedb');
 const client = new discord.Client();
 client.commands = new discord.Collection();
 require('dotenv').config();
@@ -20,13 +20,23 @@ const startBot = (token, prefix) => {
       client.channels.cache
         .get(`799370509946060810`)
         .send(`<@!${message.author.id}>: ${message.content}`);
-    }
-    else if (message.content.startsWith('gb/toss')) {
+    } else if (message.content.startsWith('gb/toss')) {
       Promise.resolve(randomTossup())
-        .then(tossup => client.channels.cache
-          .get(`799370509946060810`)
-          .send(`${tossup}`))
+        .then(tossup => {
+          let sentences = tossup[0].split('. ')
+          let count = 0
+          setInterval(
+            () => {
+              if (count <= sentences.length) {
+                client.channels.cache
+                  .get(`799370509946060810`)
+                  .send(sentences[count])
+                count++
+              }
+            }, 5000)
+        })
     }
+
 
     //End if sent by bot or message doesn't start with prefix
     if (message.author.bot || !message.content.startsWith(prefix)) {
@@ -61,9 +71,10 @@ const startBot = (token, prefix) => {
     } catch (error) {
       console.log(error);
     }
-  });
+  })
 
-  //On ready.
+
+//On ready.
   client.once("ready", () => {
     console.log("bot ready!");
     client.user.setPresence({
@@ -76,11 +87,9 @@ const startBot = (token, prefix) => {
     });
   });
 
-  //Login with token
+//Login with token
   client.login(token);
-
 }
-
 module.exports = {
   startBot,
   client
