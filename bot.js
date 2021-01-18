@@ -25,15 +25,23 @@ const startBot = (token, prefix) => {
         .then(tossup => {
           let sentences = tossup[0].split('. ')
           let count = 0
+          let complete = false
           setInterval(
             () => {
-              if (count <= sentences.length) {
+              if (count < sentences.length) {
                 client.channels.cache
                   .get(`799370509946060810`)
                   .send(sentences[count])
                 count++
               }
+              else if (!complete){
+                client.channels.cache
+                  .get(`799370509946060810`)
+                  .send(tossup[1])
+                complete = true
+              }
             }, 5000)
+
         })
     }
 
