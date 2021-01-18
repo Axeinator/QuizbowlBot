@@ -1,5 +1,5 @@
 const discord = require("discord.js");
-const { db } = require('./helpers/firebase/firebaseSetup');
+const { randomTossup } = require('./helpers/firebase/realtimedb');
 const client = new discord.Client();
 client.commands = new discord.Collection();
 require('dotenv').config();
@@ -20,6 +20,12 @@ const startBot = (token, prefix) => {
       client.channels.cache
         .get(`799370509946060810`)
         .send(`<@!${message.author.id}>: ${message.content}`);
+    }
+    else if (message.content.startsWith('gb/toss')) {
+      Promise.resolve(randomTossup())
+        .then(tossup => client.channels.cache
+          .get(`799370509946060810`)
+          .send(`${tossup}`))
     }
 
     //End if sent by bot or message doesn't start with prefix

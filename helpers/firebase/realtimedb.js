@@ -9,7 +9,9 @@ function getRandomInt(min, max) {
 
 db = dbSetup()
 
-function randomTossup() {
-  db.ref(`/tossups/${getRandomInt(1, 99)}`).once('value')
-    .then(snapshot => console.log(snapshot.val()))
+async function randomTossup() {
+  let tossup = await db.ref(`/tossups/${getRandomInt(1, 99)}`).once('value')
+  return tossup.val().text
 }
+
+module.exports = { randomTossup }
