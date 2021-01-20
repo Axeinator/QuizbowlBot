@@ -5,6 +5,8 @@ client.commands = new discord.Collection();
 require('dotenv').config();
 const fs = require('fs');
 
+let buzzed = false
+
 //This is the function to start the bot and do everything you need to do
 const startBot = (token, prefix) => {
   const commandFiles = fs.readdirSync('./botCommands').filter(file => file.endsWith('.js'));
@@ -15,7 +17,6 @@ const startBot = (token, prefix) => {
   }
 
   client.on('message', async message => {
-
     if (message.channel.type == 'dm' || message.content.startsWith(prefix)) {
       client.channels.cache
         .get(`799370509946060810`)
@@ -25,24 +26,27 @@ const startBot = (token, prefix) => {
         .then(tossup => {
           let sentences = tossup[0].split('. ')
           let count = 0
-          let complete = false
-          setInterval(
+          buzzed = false // reset this so that the answer doesn't repeat
+          let question = setInterval(
             () => {
-              if (count < sentences.length) {
-                client.channels.cache
-                  .get(`799370509946060810`)
+              if (count < sentences.length && !buzzed) {
+                message.channel
                   .send(sentences[count])
                 count++
               }
-              else if (!complete){
-                client.channels.cache
-                  .get(`799370509946060810`)
+              if (buzzed)
+              {
+                message.channel
                   .send(tossup[1])
-                complete = true
+                clearInterval(question)
               }
             }, 5000)
 
+
         })
+    } else if (message.content.startsWith('buzz')) {
+      message.channel.send('Buzz Recognized, question stopping')
+      buzzed = true
     }
 
 
@@ -63,7 +67,7 @@ const startBot = (token, prefix) => {
 
     const command = client.commands.get(commandName);
     if (command.args > args.length) {
-      message.reply(`there were not sufficent arguments for the command (it requires ${command.args} argument${command.args == 1 ? '' : 's'} but you provided ${args.length} argument${args.length == 1 ? '' : 's'}).`);
+      message.reply(`there were not sufficient arguments for the command (it requires ${command.args} argument${command.args == 1 ? '' : 's'} but you provided ${args.length} argument${args.length == 1 ? '' : 's'}).`);
       return;
     }
 
@@ -90,7 +94,6 @@ const startBot = (token, prefix) => {
       activity: {
         name: 'quizdb.org | gb/help',
         type: 'WATCHING',
-        url: 'https://www.kidovid19.com'
       }
     });
   });
