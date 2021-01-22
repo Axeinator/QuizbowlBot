@@ -5,12 +5,11 @@ client.commands = new discord.Collection();
 require('dotenv').config();
 const fs = require('fs');
 
-let buzzed = false
-
 //This is the function to start the bot and do everything you need to do
 const startBot = (token, prefix) => {
   const commandFiles = fs.readdirSync('./botCommands').filter(file => file.endsWith('.js'));
-
+  let buzzed = false
+  let questionRunning = false
   for (const file of commandFiles) {
     const command = require(`./botCommands/${file}`);
     client.commands.set(command.name, command);
@@ -26,6 +25,7 @@ const startBot = (token, prefix) => {
         .then(tossup => {
           let sentences = tossup[0].split('. ')
           let count = 0
+          questionRunning = true
           buzzed = false // reset this so that the answer doesn't repeat
           let question = setInterval(
             () => {
@@ -39,12 +39,12 @@ const startBot = (token, prefix) => {
                 message.channel
                   .send(tossup[1])
                 clearInterval(question)
+                buzzed = false
+                questionRunning = false
               }
             }, 5000)
-
-
         })
-    } else if (message.content.startsWith('buzz')) {
+    } else if (message.content.startsWith('buzz') && questionRunning) {
       message.channel.send('Buzz Recognized, question stopping')
       buzzed = true
     }
